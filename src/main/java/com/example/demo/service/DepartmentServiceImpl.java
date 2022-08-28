@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Department;
+import com.example.demo.error.DepartmentNotFoundException;
 import com.example.demo.repository.DepartmentRepository;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,12 @@ public class DepartmentServiceImpl implements DepartmentService{
   }
 
   @Override
-  public Department fetchDepartmentById(Long id) {
-    return departmentRepository.findById(id).orElseThrow();
+  public Department fetchDepartmentById(Long id) throws DepartmentNotFoundException {
+    Optional<Department> department = departmentRepository.findById(id);
+    if(department.isEmpty()) {
+      throw  new DepartmentNotFoundException("department not available");
+    }
+    return department.get();
   }
 
   @Override
@@ -40,5 +46,19 @@ public class DepartmentServiceImpl implements DepartmentService{
      depDB.setDepartmentName(department.getDepartmentName());
     }
 
+    if(Objects.nonNull(department.getDepartmentCode()) && !"".equalsIgnoreCase(department.getDepartmentCode())) {
+      depDB.setDepartmentCode(department.getDepartmentCode());
+    }
+
+    if(Objects.nonNull(department.getDepartmentAddress()) && !"".equalsIgnoreCase(department.getDepartmentAddress())) {
+      depDB.setDepartmentAddress(department.getDepartmentAddress());
+    }
+
+    return  departmentRepository.save(depDB);
+  }
+
+  @Override
+  public Department fetchDepartmentByName(String departmentName) {
+    return departmentRepository.findByDepartmentNameIgnoreCase(departmentName);
   }
 }

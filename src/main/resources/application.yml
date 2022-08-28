@@ -1,0 +1,61 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: prod
+
+---
+
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3307/manish
+    password: '123'
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+welcome:
+  message: 'hai how are you? '
+---
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3307/manish_test
+    password: '123'
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+welcome:
+  message: 'hai how are you? '
+
+---
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3307/manish_prod
+    password: '123'
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+welcome:
+  message: 'hai how are you? '
+
+#this will enable all the endpoints of the actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: env,beans
+
+
